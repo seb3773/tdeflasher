@@ -55,6 +55,15 @@ target_link_libraries(tde-flasher
 )
 
 # Aggressive custom strip step
-add_custom_command(TARGET tde-flasher POST_BUILD
-    COMMAND strip --strip-all -R .comment -R .note tde-flasher
-)
+find_program(SSTRIP_EXECUTABLE NAMES sstrip)
+if(SSTRIP_EXECUTABLE)
+    add_custom_command(TARGET tde-flasher POST_BUILD
+        COMMAND ${SSTRIP_EXECUTABLE} tde-flasher
+        COMMENT "Running sstrip on tde-flasher"
+    )
+else()
+    add_custom_command(TARGET tde-flasher POST_BUILD
+        COMMAND strip --strip-all -R .comment -R .note tde-flasher
+        COMMENT "Running strip on tde-flasher"
+    )
+endif()
