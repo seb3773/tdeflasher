@@ -1,8 +1,8 @@
-# TDE-Flasher
+# tdeFlasher
 
-![TDE-Flasher Logo](./konquiflasher.png)
+![tdeFlasher Logo](./konquiflasher.png)
 
-**TDE-Flasher** is a lightweight, blazing-fast, OS image flasher natively designed for the **Trinity Desktop Environment (TDE)** using the **TQt3** toolkit. 
+**tdeFlasher** is a lightweight, blazing-fast, OS image flasher natively designed for the **Trinity Desktop Environment (TDE)** using the **TQt3** toolkit. 
 
 This project is an assumed ^_^, native C++ clone of the popular [balenaEtcher](https://etcher.balena.io/) application, created to provide the exact same intuitive 3-step User Experience (UX) without the heavy resource overhead of Electron for Trinity desktop users.
 
@@ -22,7 +22,7 @@ This project is an assumed ^_^, native C++ clone of the popular [balenaEtcher](h
 
 ## Dependencies
 
-To build TDE-Flasher from source, you will need a C++14 capable compiler and the following development packages:
+To build tdeFlasher from source, you will need a C++14 capable compiler and the following development packages:
 
 - `cmake` (>= 3.10)
 - `tqt3-dev` (Trinity Qt3 toolkit)
@@ -55,7 +55,7 @@ Writing to raw block devices (e.g., `/dev/sdX`) usually requires root privileges
 sudo ./tde-flasher
 ```
 
-## Why TDE-Flasher?
+## Why tdeFlasher?
 
 BalenaEtcher is a fantastic tool, but its reliance on web technologies (Electron/Chromium) means it often consumes hundreds of megabytes of RAM just to sit idle, which can be problematic on older hardware, often targeted by trinity desktop. 
 
