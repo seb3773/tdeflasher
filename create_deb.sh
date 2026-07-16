@@ -9,13 +9,47 @@ VERSION="1.0.0"
 ARCH="amd64"
 MAINTAINER="Your Name <your.email@example.com>"
 DESCRIPTION="A lightweight, blazing-fast OS image flasher natively designed for TDE/TQt3."
+
+STATIC_TQT3=0
+PKG_SUFFIX=""
+CMAKE_OPTS="-DCMAKE_BUILD_TYPE=Release"
+# Base dependencies for all builds (system libs and image formats)
+# Note: libmng, png, jpeg, lcms2, and X11 libs are required by TQt3 components
+SYS_DEPENDS="libc6, libgcc-s1, libstdc++6, libarchive13, libcurl4 | libcurl4-nss | libcurl4-gnutls | libcurl3-nss | libcurl3-gnutls, libgcrypt20, libmng1, libpng16-16, libjpeg62-turbo, liblcms2-2, libxft2, libxrender1, libxext6, libx11-6, libfontconfig1, libfreetype6"
+
+# Parse arguments
+while [[ "$#" -gt 0 ]]; do
+    case $1 in
+        -static) STATIC_TQT3=1 ;;
+        *) echo "Unknown parameter passed: $1"; exit 1 ;;
+    esac
+    shift
+done
+
+if [ "$STATIC_TQT3" -eq 1 ]; then
+    echo "[*] Static TQt3 mode enabled."
+    PKG_SUFFIX="_static"
+    PKG_NAME_SUFFIX="-static"
+    CMAKE_OPTS="$CMAKE_OPTS -DUSE_STATIC_TQT3=ON"
+    # For static build, we only remove the tqt3 framework dependency
+    DEPENDS="$SYS_DEPENDS"
+    CONFLICTS="tdeflasher"
+else
+    echo "[*] Dynamic TQt3 mode enabled."
+    PKG_SUFFIX=""
+    PKG_NAME_SUFFIX=""
+    CMAKE_OPTS="$CMAKE_OPTS -DUSE_STATIC_TQT3=OFF"
+    # For dynamic build, we add tqt3 framework
+    DEPENDS="$SYS_DEPENDS, tqt3 | libtqt4"
+    CONFLICTS="tdeflasher-static"
+fi
 # ---------------------
 
 BUILD_DIR="build"
-PKG_DIR="${APP_NAME}_${VERSION}_${ARCH}"
+PKG_DIR="${APP_NAME}_${VERSION}${PKG_SUFFIX}_${ARCH}"
 DEB_NAME="${PKG_DIR}.deb"
 
-echo "[*] Packaging TDE-Flasher version ${VERSION} for ${ARCH}..."
+echo "[*] Packaging TDE-Flasher version ${VERSION} for ${ARCH} (Suffix: ${PKG_SUFFIX:-None})..."
 
 # 1. Clean and build the project
 echo "[*] Cleaning old build..."
@@ -24,7 +58,7 @@ mkdir "$BUILD_DIR"
 cd "$BUILD_DIR"
 
 echo "[*] Running CMake..."
-cmake -DCMAKE_BUILD_TYPE=Release ..
+cmake $CMAKE_OPTS ..
 
 echo "[*] Compiling..."
 make -j$(nproc)
@@ -69,12 +103,13 @@ chmod 644 "$PKG_DIR/usr/share/icons/hicolor/48x48/apps/tdeflasher.png"
 # 4. Generate the Debian control file
 echo "[*] Generating DEBIAN/control file..."
 cat << EOF > "$PKG_DIR/DEBIAN/control"
-Package: $APP_NAME
+Package: ${APP_NAME}${PKG_NAME_SUFFIX}
 Version: $VERSION
 Section: utils
 Priority: optional
 Architecture: $ARCH
-Depends: libc6, libgcc-s1, libstdc++6, libarchive13, libcurl4 | libcurl4-nss | libcurl4-gnutls | libcurl3-nss | libcurl3-gnutls, libgcrypt20, tqt3 | libtqt4
+Depends: $DEPENDS
+Conflicts: $CONFLICTS
 Maintainer: $MAINTAINER
 Description: $DESCRIPTION
  TDE-Flasher perfectly replicates the foolproof Etcher workflow in a native, 
