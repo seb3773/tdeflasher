@@ -4,6 +4,8 @@ if(POLICY CMP0069)
 endif()
 project(tde-flasher VERSION 0.1.0 LANGUAGES CXX)
 
+option(USE_STATIC_TQT3 "Link TQt3 statically" OFF)
+
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 

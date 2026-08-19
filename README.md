@@ -55,6 +55,21 @@ Writing to raw block devices (e.g., `/dev/sdX`) usually requires root privileges
 sudo ./tde-flasher
 ```
 
+## Packaging
+
+- **Debian Package (`.deb`)**:
+  ```bash
+  ./create_deb.sh
+  ```
+- **Q4OS Installer (`.qsi`)**:
+  ```bash
+  ./build_qsi.sh
+  ```
+- **AppImage Release**:
+  ```bash
+  ./build_appimage.sh
+  ```
+
 ## Why tdeFlasher?
 
 BalenaEtcher is a fantastic tool, but its reliance on web technologies (Electron/Chromium) means it often consumes hundreds of megabytes of RAM just to sit idle, which can be problematic on older hardware, often targeted by trinity desktop. 
