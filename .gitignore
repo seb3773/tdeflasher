@@ -1,0 +1,15 @@
+# Build directories
+build/
+bin/
+
+# Binaries
+tdeflasher
+tde-flasher
+*.AppImage
+*.qsi
+*.deb
+
+# QSI build directories
+qsi_setup/deb_packages/
+qsi_setup/output/
+qsi_setup/qinstaller
