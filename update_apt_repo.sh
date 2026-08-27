@@ -160,22 +160,6 @@ if [ -d "$REPO_DIR/screenshots" ]; then
     done
 fi
 
-# Build Method 2 Download cards (all 4 packages)
-STATIC_DEB_CARD=""
-if [ -n "$LATEST_STATIC_DEB_NAME" ]; then
-    STATIC_DEB_CARD="
-        <div class=\"download-card\">
-          <div class=\"download-header\">
-            <span class=\"download-title\">Standalone (.deb)</span>
-            <span class=\"download-tag\">Static TQt3</span>
-          </div>
-          <p class=\"download-desc\">Debian package with embedded static TQt3 framework (runs on Debian/Ubuntu/Mint without TDE installed).</p>
-          <a href=\"pool/main/t/tdeflasher/${LATEST_STATIC_DEB_NAME}\" class=\"btn-download\">
-            Download Static .deb
-          </a>
-        </div>"
-fi
-
 cat << EOF > "$PAGES_DIR/index.html"
 <!DOCTYPE html>
 <html lang="en">
@@ -380,28 +364,43 @@ cat << EOF > "$PAGES_DIR/index.html"
       background: var(--card-hover);
     }
 
-    .download-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 8px;
-    }
-
-    .download-title {
-      font-size: 1.02rem;
-      font-weight: 700;
-      color: #fff;
-    }
-
     .download-tag {
+      display: inline-block;
+      align-self: flex-start;
       font-size: 0.70rem;
       font-weight: 600;
-      padding: 2px 7px;
+      padding: 2px 8px;
       border-radius: 12px;
       background: rgba(56, 189, 248, 0.15);
       color: #38bdf8;
-      border: 1px solid rgba(56, 189, 248, 0.3);
+      border: 1px solid rgba(56, 189, 248, 0.35);
+      margin-bottom: 10px;
       white-space: nowrap;
+    }
+
+    .download-tag-green {
+      background: rgba(34, 197, 94, 0.15);
+      color: #4ade80;
+      border-color: rgba(34, 197, 94, 0.35);
+    }
+
+    .download-tag-amber {
+      background: rgba(245, 158, 11, 0.15);
+      color: #fbbf24;
+      border-color: rgba(245, 158, 11, 0.35);
+    }
+
+    .download-tag-purple {
+      background: rgba(168, 85, 247, 0.15);
+      color: #c084fc;
+      border-color: rgba(168, 85, 247, 0.35);
+    }
+
+    .download-title {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 6px;
     }
 
     .download-desc {
@@ -603,34 +602,49 @@ sudo apt install tdeflasher</code></pre>
       </p>
 
       <div class="downloads-grid">
+        <!-- 1. Debian / TDE (.deb) -->
         <div class="download-card">
-          <div class="download-header">
-            <span class="download-title">Debian / TDE (.deb)</span>
+          <div>
             <span class="download-tag">Recommended</span>
+            <div class="download-title">Debian / TDE (.deb)</div>
+            <p class="download-desc">Standard dynamically linked package for Trinity Desktop / Debian-based systems.</p>
           </div>
-          <p class="download-desc">Standard dynamically linked package for Trinity Desktop / Debian-based systems.</p>
           <a href="pool/main/t/tdeflasher/${LATEST_DEB_NAME}" class="btn-download">
             Download .deb
           </a>
         </div>
-${STATIC_DEB_CARD}
+
+        <!-- 2. Q4OS Installer (.qsi) -->
         <div class="download-card">
-          <div class="download-header">
-            <span class="download-title">Q4OS Installer (.qsi)</span>
-            <span class="download-tag">Q4OS 1-Click</span>
+          <div>
+            <span class="download-tag download-tag-green">Q4OS 1-Click</span>
+            <div class="download-title">Q4OS Installer (.qsi)</div>
+            <p class="download-desc">Graphical one-click installer designed specifically for Q4OS Trinity desktop.</p>
           </div>
-          <p class="download-desc">Graphical one-click installer designed specifically for Q4OS Trinity desktop.</p>
           <a href="${LATEST_QSI_NAME}" class="btn-download">
             Download .qsi
           </a>
         </div>
 
+        <!-- 3. Standalone (.deb) -->
         <div class="download-card">
-          <div class="download-header">
-            <span class="download-title">Standalone (.AppImage)</span>
-            <span class="download-tag">Universal x86_64</span>
+          <div>
+            <span class="download-tag download-tag-amber">Static TQt3</span>
+            <div class="download-title">Standalone (.deb)</div>
+            <p class="download-desc">Debian package with embedded static TQt3 framework (runs on Debian/Ubuntu/Mint without TDE installed).</p>
           </div>
-          <p class="download-desc">Self-contained portable executable with bundled dependencies (runs on any Linux distro).</p>
+          <a href="pool/main/t/tdeflasher/${LATEST_STATIC_DEB_NAME}" class="btn-download">
+            Download Static .deb
+          </a>
+        </div>
+
+        <!-- 4. Standalone (.AppImage) -->
+        <div class="download-card">
+          <div>
+            <span class="download-tag download-tag-purple">Universal x86_64</span>
+            <div class="download-title">Standalone (.AppImage)</div>
+            <p class="download-desc">Self-contained portable executable with bundled dependencies (runs on any Linux distro).</p>
+          </div>
           <a href="${LATEST_APPIMAGE_NAME}" class="btn-download">
             Download AppImage
           </a>
@@ -751,7 +765,7 @@ echo "Committing and pushing to gh-pages branch..."
 (
     cd "$PAGES_DIR"
     git add -A
-    git commit -m "Update APT repository and deploy GitHub Pages (4 packages): $(date +'%Y-%m-%d %H:%M:%S')" || echo "No changes to commit."
+    git commit -m "Reorder cards and place badges above titles: $(date +'%Y-%m-%d %H:%M:%S')" || echo "No changes to commit."
     git push origin "$PAGES_BRANCH"
 )
 
