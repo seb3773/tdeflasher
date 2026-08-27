@@ -128,6 +128,16 @@ if [ -z "$LATEST_DEB_NAME" ] && [ ${#DEB_FILES[@]} -gt 0 ]; then
     LATEST_DEB_NAME=$(basename "${DEB_FILES[0]}")
 fi
 
+# Find static deb
+LATEST_STATIC_DEB_NAME=""
+for deb in "${DEB_FILES[@]}"; do
+    base=$(basename "$deb")
+    if [[ "$base" == *"_static_"* ]]; then
+        LATEST_STATIC_DEB_NAME="$base"
+        break
+    fi
+done
+
 LATEST_QSI_NAME=""
 if [ ${#QSI_FILES[@]} -gt 0 ]; then
     LATEST_QSI_NAME=$(basename "${QSI_FILES[0]}")
@@ -148,6 +158,22 @@ if [ -d "$REPO_DIR/screenshots" ]; then
         </div>
 "
     done
+fi
+
+# Build Method 2 Download cards (all 4 packages)
+STATIC_DEB_CARD=""
+if [ -n "$LATEST_STATIC_DEB_NAME" ]; then
+    STATIC_DEB_CARD="
+        <div class=\"download-card\">
+          <div class=\"download-header\">
+            <span class=\"download-title\">Standalone (.deb)</span>
+            <span class=\"download-tag\">Static TQt3</span>
+          </div>
+          <p class=\"download-desc\">Debian package with embedded static TQt3 framework (runs on Debian/Ubuntu/Mint without TDE installed).</p>
+          <a href=\"pool/main/t/tdeflasher/${LATEST_STATIC_DEB_NAME}\" class=\"btn-download\">
+            Download Static .deb
+          </a>
+        </div>"
 fi
 
 cat << EOF > "$PAGES_DIR/index.html"
@@ -332,7 +358,7 @@ cat << EOF > "$PAGES_DIR/index.html"
     /* Downloads Grid */
     .downloads-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(185px, 1fr));
       gap: 16px;
       margin-top: 16px;
     }
@@ -362,26 +388,28 @@ cat << EOF > "$PAGES_DIR/index.html"
     }
 
     .download-title {
-      font-size: 1.05rem;
+      font-size: 1.02rem;
       font-weight: 700;
       color: #fff;
     }
 
     .download-tag {
-      font-size: 0.72rem;
+      font-size: 0.70rem;
       font-weight: 600;
-      padding: 2px 8px;
+      padding: 2px 7px;
       border-radius: 12px;
       background: rgba(56, 189, 248, 0.15);
       color: #38bdf8;
       border: 1px solid rgba(56, 189, 248, 0.3);
+      white-space: nowrap;
     }
 
     .download-desc {
-      font-size: 0.85rem;
+      font-size: 0.84rem;
       color: var(--text-muted);
       margin-bottom: 14px;
       flex-grow: 1;
+      line-height: 1.45;
     }
 
     .btn-download {
@@ -393,7 +421,7 @@ cat << EOF > "$PAGES_DIR/index.html"
       text-align: center;
       text-decoration: none;
       font-weight: 600;
-      font-size: 0.9rem;
+      font-size: 0.88rem;
       transition: all 0.2s;
     }
 
@@ -585,7 +613,7 @@ sudo apt install tdeflasher</code></pre>
             Download .deb
           </a>
         </div>
-
+${STATIC_DEB_CARD}
         <div class="download-card">
           <div class="download-header">
             <span class="download-title">Q4OS Installer (.qsi)</span>
@@ -599,7 +627,7 @@ sudo apt install tdeflasher</code></pre>
 
         <div class="download-card">
           <div class="download-header">
-            <span class="download-title">Standalone Portable (.AppImage)</span>
+            <span class="download-title">Standalone (.AppImage)</span>
             <span class="download-tag">Universal x86_64</span>
           </div>
           <p class="download-desc">Self-contained portable executable with bundled dependencies (runs on any Linux distro).</p>
@@ -723,7 +751,7 @@ echo "Committing and pushing to gh-pages branch..."
 (
     cd "$PAGES_DIR"
     git add -A
-    git commit -m "Update APT repository and deploy GitHub Pages: $(date +'%Y-%m-%d %H:%M:%S')" || echo "No changes to commit."
+    git commit -m "Update APT repository and deploy GitHub Pages (4 packages): $(date +'%Y-%m-%d %H:%M:%S')" || echo "No changes to commit."
     git push origin "$PAGES_BRANCH"
 )
 
