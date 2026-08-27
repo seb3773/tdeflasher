@@ -1,0 +1,24 @@
+Architectures: amd64
+Codename: stable
+Components: main
+Date: Thu, 27 Aug 2026 11:11:48 +0000
+Description: APT Repository for tdeFlasher (OS Image Flasher for Trinity Desktop & Linux)
+Label: tdeFlasher APT Repository
+Origin: tdeFlasher
+Suite: stable
+MD5Sum:
+ 39cf5afd72371bd52a0fbe66fb3b8aff              249 Release
+ ed1c9d904d4b2218fd1c0f497327151a             2101 main/binary-amd64/Packages
+ 695c93da50172423c0f6cd7819ea2160              819 main/binary-amd64/Packages.gz
+SHA1:
+ 31d114bf725ecc79e7d97dc5a741272df849d615              249 Release
+ 62389eb922c4db8cc9b58e18e7cff53f1ba99818             2101 main/binary-amd64/Packages
+ ec0e76c8ec63276b5d7fb060a111f60fc7f10b74              819 main/binary-amd64/Packages.gz
+SHA256:
+ 795fc468c90ffa0a89e0212351a05eda1d23f031d71fcc66b98150f34e5268ac              249 Release
+ e3906f886f71aa904d44544b7879b4c11f31a01b78e39f752429283bbbcb4cf3             2101 main/binary-amd64/Packages
+ 6e5e12f0d6b98d840032cc7f92ffa4b196165c97eeaee8276f810ece5d320fba              819 main/binary-amd64/Packages.gz
+SHA512:
+ 1b6ab6a8fa9e02fe84a11a31d23ebe5ba6c9b8b2d362dc5e07d7ce6787e647cda5282dc4c45151437208fd892c89247555c2bbf45196f4e742f247bbd41d0259              249 Release
+ 8c94a67fa36db7466c02b23600c8599dffce293bb53169150d7f5054ad21a1e18e36f1b232db4a3291866cfac7331705e9a5f9d4fcb23d7821d1f06f789a16c8             2101 main/binary-amd64/Packages
+ 4218f1a7af71d44c001ad9adb0736442e56988450b88780a4d0deaa54561797186831ab9c53a9ebd4749c85d90b02a54242316e1354bc74d185d4295777fe7e2              819 main/binary-amd64/Packages.gz
