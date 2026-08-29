@@ -7,15 +7,15 @@ set -e
 APP_NAME="tdeflasher"
 VERSION="1.0.0"
 ARCH="amd64"
-MAINTAINER="Your Name <your.email@example.com>"
-DESCRIPTION="A lightweight, blazing-fast OS image flasher natively designed for TDE/TQt3."
+MAINTAINER="seb3773"
+DESCRIPTION="Lightweight OS image flasher natively designed for Trinity Desktop (TDE) & Linux"
 
 STATIC_TQT3=0
 PKG_SUFFIX=""
 CMAKE_OPTS="-DCMAKE_BUILD_TYPE=Release"
-# Base dependencies for all builds (system libs and image formats)
-# Note: libmng, png, jpeg, lcms2, and X11 libs are required by TQt3 components
-SYS_DEPENDS="libc6, libgcc-s1, libstdc++6, libarchive13, libcurl4 | libcurl4-nss | libcurl4-gnutls | libcurl3-nss | libcurl3-gnutls, libgcrypt20, libmng1, libpng16-16, libjpeg62-turbo, liblcms2-2, libxft2, libxrender1, libxext6, libx11-6, libfontconfig1, libfreetype6"
+
+# Common base runtime dependencies for I/O and crypto
+CORE_DEPENDS="libarchive13, libcurl4 | libcurl3-gnutls | libcurl4-gnutls-dev | libcurl3-nss, libgcrypt20"
 
 # Parse arguments
 while [[ "$#" -gt 0 ]]; do
@@ -31,16 +31,16 @@ if [ "$STATIC_TQT3" -eq 1 ]; then
     PKG_SUFFIX="_static"
     PKG_NAME_SUFFIX="-static"
     CMAKE_OPTS="$CMAKE_OPTS -DUSE_STATIC_TQT3=ON"
-    # For static build, we only remove the tqt3 framework dependency
-    DEPENDS="$SYS_DEPENDS"
+    # For static build, include base X11/image format runtime libraries
+    DEPENDS="$CORE_DEPENDS, libx11-6, libxext6, libxrender1, libxft2, libfontconfig1, libfreetype6, libpng16-16, libjpeg62-turbo | libjpeg62, libmng1 | libmng2, liblcms2-2"
     CONFLICTS="tdeflasher"
 else
     echo "[*] Dynamic TQt3 mode enabled."
     PKG_SUFFIX=""
     PKG_NAME_SUFFIX=""
     CMAKE_OPTS="$CMAKE_OPTS -DUSE_STATIC_TQT3=OFF"
-    # For dynamic build, we add tqt3 framework
-    DEPENDS="$SYS_DEPENDS, tqt3 | libtqt4"
+    # For dynamic build, use the Trinity TQt3 GUI library
+    DEPENDS="libtqt3-mt-trinity (>= 4:14.0.0) | libtqt3-mt, $CORE_DEPENDS"
     CONFLICTS="tdeflasher-static"
 fi
 # ---------------------
@@ -82,7 +82,10 @@ fi
 cp build/gui/tde-flasher "$PKG_DIR/usr/bin/$APP_NAME"
 chmod 755 "$PKG_DIR/usr/bin/$APP_NAME"
 
-# Create a temporary desktop entry if it doesn't exist
+# Strip binary
+strip --strip-all "$PKG_DIR/usr/bin/$APP_NAME" || true
+
+# Create desktop entry
 cat << 'EOF' > "$PKG_DIR/usr/share/applications/tdeflasher.desktop"
 [Desktop Entry]
 Name=TDE-Flasher
@@ -101,6 +104,7 @@ cp konquiflasher.png "$PKG_DIR/usr/share/icons/hicolor/48x48/apps/tdeflasher.png
 chmod 644 "$PKG_DIR/usr/share/icons/hicolor/48x48/apps/tdeflasher.png"
 
 # 4. Generate the Debian control file
+INSTALLED_SIZE_KB="$(du -sk "$PKG_DIR/usr" | awk '{print $1}')"
 echo "[*] Generating DEBIAN/control file..."
 cat << EOF > "$PKG_DIR/DEBIAN/control"
 Package: ${APP_NAME}${PKG_NAME_SUFFIX}
@@ -108,6 +112,7 @@ Version: $VERSION
 Section: utils
 Priority: optional
 Architecture: $ARCH
+Installed-Size: $INSTALLED_SIZE_KB
 Depends: $DEPENDS
 Conflicts: $CONFLICTS
 Maintainer: $MAINTAINER
@@ -118,6 +123,33 @@ Description: $DESCRIPTION
  URL streaming verification, block cloning, and safety checks.
 EOF
 chmod 644 "$PKG_DIR/DEBIAN/control"
+
+# Post-install & Pre-remove scripts for icon cache
+cat > "$PKG_DIR/DEBIAN/postinst" <<'EOF'
+#!/bin/sh
+set -e
+if command -v gtk-update-icon-cache >/dev/null 2>&1; then
+	gtk-update-icon-cache -f -t /usr/share/icons/hicolor >/dev/null 2>&1 || true
+fi
+if command -v update-desktop-database >/dev/null 2>&1; then
+	update-desktop-database -q /usr/share/applications >/dev/null 2>&1 || true
+fi
+exit 0
+EOF
+chmod 0755 "$PKG_DIR/DEBIAN/postinst"
+
+cat > "$PKG_DIR/DEBIAN/prerm" <<'EOF'
+#!/bin/sh
+set -e
+if command -v gtk-update-icon-cache >/dev/null 2>&1; then
+	gtk-update-icon-cache -f -t /usr/share/icons/hicolor >/dev/null 2>&1 || true
+fi
+if command -v update-desktop-database >/dev/null 2>&1; then
+	update-desktop-database -q /usr/share/applications >/dev/null 2>&1 || true
+fi
+exit 0
+EOF
+chmod 0755 "$PKG_DIR/DEBIAN/prerm"
 
 # 5. Build the .deb file
 echo "[*] Building the .deb package..."
