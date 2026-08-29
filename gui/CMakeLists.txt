@@ -7,6 +7,8 @@ set(TDE_PREFIX "/opt/trinity" CACHE PATH "TDE installation prefix")
 include_directories(
     ${TQT_INCLUDE_DIRS}
     ${TDE_PREFIX}/include
+    ${TDE_PREFIX}/include/tde
+    /usr/include/tqt
     ${CMAKE_CURRENT_BINARY_DIR}
     ${CMAKE_CURRENT_SOURCE_DIR}/../core
 )
@@ -63,10 +65,24 @@ if(USE_STATIC_TQT3)
     list(APPEND TQT_LIBRARIES_TO_LINK X11 Xext Xrender Xft fontconfig freetype z dl GL png jpeg mng lcms2 SM ICE Xi Xcursor Xrandr Xinerama Xfixes)
     message(STATUS "Linking TQt3 STATICALLY using: ${TQT_LIBRARIES_TO_LINK}")
 else()
-    # Force dynamic by finding the .so specifically if possible, or just use pkg-config results
-    # We use the results from pkg_check_modules(TQT REQUIRED tqt)
+    # Dynamic Trinity TDE mode
     set(TQT_LIBRARIES_TO_LINK ${TQT_LIBRARIES})
-    message(STATUS "Linking TQt3 DYNAMICALLY using: ${TQT_LIBRARIES_TO_LINK}")
+    
+    # Check for TDE core/UI libraries for native desktop theme integration
+    find_library(TDECORE_LIB NAMES tdecore PATHS ${TDE_PREFIX}/lib /usr/lib/x86_64-linux-gnu /usr/lib)
+    find_library(TDEUI_LIB NAMES tdeui PATHS ${TDE_PREFIX}/lib /usr/lib/x86_64-linux-gnu /usr/lib)
+    find_library(DCOP_LIB NAMES DCOP PATHS ${TDE_PREFIX}/lib /usr/lib/x86_64-linux-gnu /usr/lib)
+    
+    if(TDECORE_LIB AND TDEUI_LIB)
+        add_definitions(-DUSE_TDE=1)
+        list(APPEND TQT_LIBRARIES_TO_LINK ${TDECORE_LIB} ${TDEUI_LIB})
+        if(DCOP_LIB)
+            list(APPEND TQT_LIBRARIES_TO_LINK ${DCOP_LIB})
+        endif()
+        message(STATUS "Native Trinity TDE integration enabled (tdecore, tdeui, DCOP)")
+    else()
+        message(STATUS "Linking TQt3 DYNAMICALLY (pure TQt3 mode): ${TQT_LIBRARIES_TO_LINK}")
+    endif()
 endif()
 
 # Link: core library + TQT3
@@ -76,16 +92,8 @@ target_link_libraries(tde-flasher
     pthread
 )
 
-# Aggressive custom strip step
-find_program(SSTRIP_EXECUTABLE NAMES sstrip)
-if(SSTRIP_EXECUTABLE)
-    add_custom_command(TARGET tde-flasher POST_BUILD
-        COMMAND ${SSTRIP_EXECUTABLE} tde-flasher
-        COMMENT "Running sstrip on tde-flasher"
-    )
-else()
-    add_custom_command(TARGET tde-flasher POST_BUILD
-        COMMAND strip --strip-all -R .comment -R .note tde-flasher
-        COMMENT "Running strip on tde-flasher"
-    )
-endif()
+# Standard strip step (avoid sstrip for dlopen compatibility)
+add_custom_command(TARGET tde-flasher POST_BUILD
+    COMMAND strip --strip-all tde-flasher
+    COMMENT "Running strip on tde-flasher"
+)
