@@ -2,14 +2,14 @@ Package: tdeflasher
 Version: 1.0.0
 Architecture: amd64
 Maintainer: seb3773
-Installed-Size: 184
+Installed-Size: 232
 Depends: libtqt3-mt-trinity (>= 4:14.0.0) | libtqt3-mt, libarchive13, libcurl4 | libcurl3-gnutls | libcurl4-gnutls-dev | libcurl3-nss, libgcrypt20
 Conflicts: tdeflasher-static
 Filename: pool/main/t/tdeflasher/tdeflasher_1.0.0_amd64.deb
-Size: 54468
-MD5sum: 64549e6dd749602ed173cea4bb228bc0
-SHA1: 6032503a8774adcfe240c77d949842bd85736027
-SHA256: c73fb73b4c07d32bf5a9b90e27b79858f118ead390bc9c6850ea293a7c546196
+Size: 68828
+MD5sum: 3205600703556182d607c10dbce2dce1
+SHA1: 688fdb39ec5b64b16f9968f172add45438ed23a0
+SHA256: 38651eb0783e0f553663b2af07853226018d378856b4a1c46bfd1965b7ecfef8
 Section: utils
 Priority: optional
 Description: Lightweight OS image flasher natively designed for Trinity Desktop (TDE) & Linux
@@ -22,14 +22,14 @@ Package: tdeflasher-static
 Version: 1.0.0
 Architecture: amd64
 Maintainer: seb3773
-Installed-Size: 5492
+Installed-Size: 5536
 Depends: libarchive13, libcurl4 | libcurl3-gnutls | libcurl4-gnutls-dev | libcurl3-nss, libgcrypt20, libx11-6, libxext6, libxrender1, libxft2, libfontconfig1, libfreetype6, libpng16-16, libjpeg62-turbo | libjpeg62, libmng1 | libmng2, liblcms2-2
 Conflicts: tdeflasher
 Filename: pool/main/t/tdeflasher/tdeflasher_1.0.0_static_amd64.deb
-Size: 1930040
-MD5sum: dba083c39b5c73a208be473ec643c42b
-SHA1: da64066a709900478ae6a0151914e4af028d1691
-SHA256: 8444c30fab03a229aadd4e3f30925fe4fa50ad852e35a2dd5752b776ad787e03
+Size: 1939144
+MD5sum: 2ec804a003249fd47679cc181cd688d8
+SHA1: 75d5b593e0db748171fd91989a2efd0c50cd6de5
+SHA256: fc321279662e5cd0d94cc1a2739fb250a5dc08da1a15a2cf2ba01204351bfd56
 Section: utils
 Priority: optional
 Description: Lightweight OS image flasher natively designed for Trinity Desktop (TDE) & Linux
