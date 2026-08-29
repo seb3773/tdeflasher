@@ -1,17 +1,18 @@
 Package: tdeflasher
 Version: 1.0.0
 Architecture: amd64
-Maintainer: Your Name <your.email@example.com>
-Depends: libc6, libgcc-s1, libstdc++6, libarchive13, libcurl4 | libcurl4-nss | libcurl4-gnutls | libcurl3-nss | libcurl3-gnutls, libgcrypt20, libmng1, libpng16-16, libjpeg62-turbo, liblcms2-2, libxft2, libxrender1, libxext6, libx11-6, libfontconfig1, libfreetype6, tqt3 | libtqt4
+Maintainer: seb3773
+Installed-Size: 184
+Depends: libtqt3-mt-trinity (>= 4:14.0.0) | libtqt3-mt, libarchive13, libcurl4 | libcurl3-gnutls | libcurl4-gnutls-dev | libcurl3-nss, libgcrypt20
 Conflicts: tdeflasher-static
 Filename: pool/main/t/tdeflasher/tdeflasher_1.0.0_amd64.deb
-Size: 54328
-MD5sum: d4b783be8aeab8ca070c611453668c50
-SHA1: b1f1f388f38cdf966ba7165b01df903d3ebad241
-SHA256: 5634c62dd2c77b88e62e2bbb6fc397fae4b8c2a0cb8bcad8640512e568147ad2
+Size: 54468
+MD5sum: 64549e6dd749602ed173cea4bb228bc0
+SHA1: 6032503a8774adcfe240c77d949842bd85736027
+SHA256: c73fb73b4c07d32bf5a9b90e27b79858f118ead390bc9c6850ea293a7c546196
 Section: utils
 Priority: optional
-Description: A lightweight, blazing-fast OS image flasher natively designed for TDE/TQt3.
+Description: Lightweight OS image flasher natively designed for Trinity Desktop (TDE) & Linux
  TDE-Flasher perfectly replicates the foolproof Etcher workflow in a native,
  compiled TQt3 application that uses minimal memory and CPU cycles while
  running natively alongside the rest of your TDE applications. Features
@@ -20,17 +21,18 @@ Description: A lightweight, blazing-fast OS image flasher natively designed for 
 Package: tdeflasher-static
 Version: 1.0.0
 Architecture: amd64
-Maintainer: Your Name <your.email@example.com>
-Depends: libc6, libgcc-s1, libstdc++6, libarchive13, libcurl4 | libcurl4-nss | libcurl4-gnutls | libcurl3-nss | libcurl3-gnutls, libgcrypt20, libmng1, libpng16-16, libjpeg62-turbo, liblcms2-2, libxft2, libxrender1, libxext6, libx11-6, libfontconfig1, libfreetype6
+Maintainer: seb3773
+Installed-Size: 5492
+Depends: libarchive13, libcurl4 | libcurl3-gnutls | libcurl4-gnutls-dev | libcurl3-nss, libgcrypt20, libx11-6, libxext6, libxrender1, libxft2, libfontconfig1, libfreetype6, libpng16-16, libjpeg62-turbo | libjpeg62, libmng1 | libmng2, liblcms2-2
 Conflicts: tdeflasher
 Filename: pool/main/t/tdeflasher/tdeflasher_1.0.0_static_amd64.deb
-Size: 1928768
-MD5sum: fc7552c6fdda95980f9df9ff07791192
-SHA1: 8d99bde406a48a8fb2e5670255c4f319608cf945
-SHA256: 826f7661ccc27e956166cfa1361b301ec9e73e5715d1a378523d00281c9bf880
+Size: 1930040
+MD5sum: dba083c39b5c73a208be473ec643c42b
+SHA1: da64066a709900478ae6a0151914e4af028d1691
+SHA256: 8444c30fab03a229aadd4e3f30925fe4fa50ad852e35a2dd5752b776ad787e03
 Section: utils
 Priority: optional
-Description: A lightweight, blazing-fast OS image flasher natively designed for TDE/TQt3.
+Description: Lightweight OS image flasher natively designed for Trinity Desktop (TDE) & Linux
  TDE-Flasher perfectly replicates the foolproof Etcher workflow in a native,
  compiled TQt3 application that uses minimal memory and CPU cycles while
  running natively alongside the rest of your TDE applications. Features
