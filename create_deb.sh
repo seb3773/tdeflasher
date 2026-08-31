@@ -124,10 +124,19 @@ Description: $DESCRIPTION
 EOF
 chmod 644 "$PKG_DIR/DEBIAN/control"
 
-# Post-install & Pre-remove scripts for icon cache
+# Post-install script
 cat > "$PKG_DIR/DEBIAN/postinst" <<'EOF'
 #!/bin/sh
 set -e
+
+# Configuration automatique du dépôt APT pour les futures mises à jour
+if [ -d /etc/apt/sources.list.d ]; then
+    cat << 'REPEOF' > /etc/apt/sources.list.d/tdeflasher.list
+# tdeFlasher APT Repository
+deb [trusted=yes] https://seb3773.github.io/tdeflasher/ stable main
+REPEOF
+fi
+
 if command -v gtk-update-icon-cache >/dev/null 2>&1; then
 	gtk-update-icon-cache -f -t /usr/share/icons/hicolor >/dev/null 2>&1 || true
 fi
@@ -138,6 +147,26 @@ exit 0
 EOF
 chmod 0755 "$PKG_DIR/DEBIAN/postinst"
 
+# Post-remove script
+cat > "$PKG_DIR/DEBIAN/postrm" <<'EOF'
+#!/bin/sh
+set -e
+
+if [ "$1" = "purge" ] || [ "$1" = "remove" ]; then
+    rm -f /etc/apt/sources.list.d/tdeflasher.list
+fi
+
+if command -v gtk-update-icon-cache >/dev/null 2>&1; then
+	gtk-update-icon-cache -f -t /usr/share/icons/hicolor >/dev/null 2>&1 || true
+fi
+if command -v update-desktop-database >/dev/null 2>&1; then
+	update-desktop-database -q /usr/share/applications >/dev/null 2>&1 || true
+fi
+exit 0
+EOF
+chmod 0755 "$PKG_DIR/DEBIAN/postrm"
+
+# Pre-remove script
 cat > "$PKG_DIR/DEBIAN/prerm" <<'EOF'
 #!/bin/sh
 set -e
