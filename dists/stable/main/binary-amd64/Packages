@@ -6,10 +6,10 @@ Installed-Size: 232
 Depends: libtqt3-mt-trinity (>= 4:14.0.0) | libtqt3-mt, libarchive13, libcurl4 | libcurl3-gnutls | libcurl4-gnutls-dev | libcurl3-nss, libgcrypt20
 Conflicts: tdeflasher-static
 Filename: pool/main/t/tdeflasher/tdeflasher_1.0.0_amd64.deb
-Size: 68828
-MD5sum: 3205600703556182d607c10dbce2dce1
-SHA1: 688fdb39ec5b64b16f9968f172add45438ed23a0
-SHA256: 38651eb0783e0f553663b2af07853226018d378856b4a1c46bfd1965b7ecfef8
+Size: 68992
+MD5sum: 2e8e45f669034b24c46102040768badb
+SHA1: a841b64d65757c84d720cc633a68df59f0181078
+SHA256: 80f92258cb24f16c23f04bb24255bc38494693fa90e77feaae6cf7d26984616e
 Section: utils
 Priority: optional
 Description: Lightweight OS image flasher natively designed for Trinity Desktop (TDE) & Linux
@@ -26,10 +26,10 @@ Installed-Size: 5536
 Depends: libarchive13, libcurl4 | libcurl3-gnutls | libcurl4-gnutls-dev | libcurl3-nss, libgcrypt20, libx11-6, libxext6, libxrender1, libxft2, libfontconfig1, libfreetype6, libpng16-16, libjpeg62-turbo | libjpeg62, libmng1 | libmng2, liblcms2-2
 Conflicts: tdeflasher
 Filename: pool/main/t/tdeflasher/tdeflasher_1.0.0_static_amd64.deb
-Size: 1939144
-MD5sum: 2ec804a003249fd47679cc181cd688d8
-SHA1: 75d5b593e0db748171fd91989a2efd0c50cd6de5
-SHA256: fc321279662e5cd0d94cc1a2739fb250a5dc08da1a15a2cf2ba01204351bfd56
+Size: 1936476
+MD5sum: 25a405ed159b9819ef51d2599b1cef74
+SHA1: b3ea32775ecbfad14f295c3865dece19d2e27e1e
+SHA256: 753aed87b0c37503eb56c81ef3d58ff86c59ce59b16dcf659d90591d7380cdd2
 Section: utils
 Priority: optional
 Description: Lightweight OS image flasher natively designed for Trinity Desktop (TDE) & Linux
