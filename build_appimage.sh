@@ -60,16 +60,32 @@ else
 	strip --strip-all "$APPDIR/usr/bin/tdeflasher" >/dev/null 2>&1 || true
 fi
 
-# Resolve and copy TQt3 and other libraries from ldd output
-echo "info: copying library dependencies..."
-while read -r libname libpath; do
-	if [[ -n "$libpath" && -f "$libpath" ]]; then
-		echo "  -> bundling: $libname ($libpath)"
-		cp -L "$libpath" "$APPDIR/usr/lib/"
-	else
-		echo "  warning: library $libname not resolved to a valid file ($libpath)"
-	fi
-done < <(ldd "$BIN_PATH" | awk '/=>/ {print $1, $3}' | grep -E '^lib(tqt|tde|DCOP|art|archive|gcrypt|gpg-error|curl)')
+# Resolve and copy library dependencies recursively
+echo "info: resolving and copying library dependencies recursively..."
+declare -A visited_libs
+# Standard libraries that must be provided by the host system (glibc, basic X11/GL, drivers)
+EXCLUDE_REGEX="^(ld-linux.*|libc\..*|libm\..*|libpthread\..*|libdl\..*|librt\..*|libresolv\..*|libutil\..*|libanl\..*|libnss_.*|libGL\..*|libGLX\..*|libEGL\..*|libdrm\..*|libglapi\..*|libgbm\..*|libX11\..*|libX11-xcb\..*|libxcb\..*|libXau\..*|libXdmcp\..*|libstdc\+\+\..*|libgcc_s\..*|libgtk3-nocsd\..*)$"
+
+queue=("$APPDIR/usr/bin/tdeflasher")
+
+while [ ${#queue[@]} -gt 0 ]; do
+	current="${queue[0]}"
+	queue=("${queue[@]:1}")
+	
+	while read -r libname libpath; do
+		[[ -z "$libname" || -z "$libpath" || ! -f "$libpath" ]] && continue
+		[[ "$libname" =~ $EXCLUDE_REGEX ]] && continue
+		
+		if [ -z "${visited_libs[$libname]:-}" ]; then
+			visited_libs["$libname"]=1
+			echo "  -> bundling: $libname ($libpath)"
+			cp -L "$libpath" "$APPDIR/usr/lib/$libname"
+			chmod u+w "$APPDIR/usr/lib/$libname"
+			strip --strip-unneeded "$APPDIR/usr/lib/$libname" 2>/dev/null || true
+			queue+=("$APPDIR/usr/lib/$libname")
+		fi
+	done < <(LD_LIBRARY_PATH="$APPDIR/usr/lib" ldd "$current" 2>/dev/null | awk '/=>/ {print $1, $3}')
+done
 
 # Copy icon
 ICON_SRC="$SRC_ROOT/konquiflasher.png"
@@ -102,7 +118,7 @@ cat > "$APPDIR/AppRun" <<'EOF'
 #!/bin/sh
 SELF=$(readlink -f "$0")
 HERE=${SELF%/*}
-export LD_LIBRARY_PATH="$HERE/usr/lib:$LD_LIBRARY_PATH"
+export LD_LIBRARY_PATH="$HERE/usr/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
 exec "$HERE/usr/bin/tdeflasher" "$@"
 EOF
 chmod 0755 "$APPDIR/AppRun"
