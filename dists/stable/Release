@@ -1,24 +1,24 @@
 Architectures: amd64
 Codename: stable
 Components: main
-Date: Sun, 06 Sep 2026 17:08:55 +0000
+Date: Sun, 06 Sep 2026 22:50:28 +0000
 Description: APT Repository for tdeFlasher (OS Image Flasher for Trinity Desktop & Linux)
 Label: tdeFlasher APT Repository
 Origin: tdeFlasher
 Suite: stable
 MD5Sum:
- 5b377e5b62373239e410171305565554              249 Release
+ 6a9a91254ccc19d1e8186cac568d2feb              249 Release
  fe2b4945c7bada2b2ccc3e04c337ab2e             1944 main/binary-amd64/Packages
- 6375bf579b3be94ce6a17179ec278e3a              834 main/binary-amd64/Packages.gz
+ 62035dc28d3a74d18d2a0e44161f0ede              834 main/binary-amd64/Packages.gz
 SHA1:
- 952cec89517ec123c17ec461c6ef1c21c28f66ac              249 Release
+ c74b6a47616c4c3d988f4f7180a4210e57268bd5              249 Release
  a3686b90f011d2a8063943012f7a5d70ad07d4e4             1944 main/binary-amd64/Packages
- 123f4d59d7a3d9fedc519c083860d33b4edb9cf5              834 main/binary-amd64/Packages.gz
+ 41818c1d94b84b60166fbe38dc8f667650838411              834 main/binary-amd64/Packages.gz
 SHA256:
- 968bbc58f2a1c04d21bf038b0b915047822fe63d0e8bb34bc8c38ba5c243059c              249 Release
+ b7a501665153ef3b90cde7f7b86784292c289f83ad11c12b3f14d12afc56c1d1              249 Release
  a416b9d522fbc9ebd696c407daf4e5ffa430e4b597fc089877a8d5d3752a9110             1944 main/binary-amd64/Packages
- fd0fee0f18b9c636edbe6b1b480ab9d263b0797c598a7966f78bce7e2d6fc153              834 main/binary-amd64/Packages.gz
+ 9c132976c734000f3cc754ae31a1806cfec77ebe24f62e2280266fef01b4965d              834 main/binary-amd64/Packages.gz
 SHA512:
- 47de63282a4009732da17d0be4a50c274537b95b380cbdff77ebd454d28eced39df1917dd60363b0e0f26ca502f3e54ad03efb9f41e09e95aeae6e0e2161d348              249 Release
+ 1c4784ac0917cc6aa9ec95bc53ec461c6acaad3e96aecac48ff14668e96c724e62717962b806f0cc1d9971b4d55bc2e566740d758bb5bac55ff293a9f66b3a40              249 Release
  29ea12be3561d9dd5ebfb3e9ecc1298b4dd048c25ac84f05ae4fab3b13a514bc9f485c364a460ab5b66272e59955ce3824ce84d515fc0313a0ba205d861f51cd             1944 main/binary-amd64/Packages
- 8d3f3b1d7804abaf0460838c5594e21af45d2ac04de011804525e57d07de71957d58ab1d135b8c5edaaa9cd9beed6d207afd0ddf52dc933a850784ec9c5d456e              834 main/binary-amd64/Packages.gz
+ 2f3639edd276375cfa13d92f4042651cfccef2d2396debaaf90da8da11ac129d6d288903f5c3af3f9a3376d4310d5c828cfb2dcda557738444da60effcee36e0              834 main/binary-amd64/Packages.gz
