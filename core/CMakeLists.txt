@@ -10,6 +10,7 @@ set(CORE_SOURCES
     blockwriter.cpp
     verifier.cpp
     flasher.cpp
+    curl_dynload.cpp
 )
 
 add_library(flasher_core STATIC ${CORE_SOURCES})
@@ -24,5 +25,5 @@ target_include_directories(flasher_core PUBLIC
 target_link_libraries(flasher_core
     ${ARCHIVE_LIBRARIES}
     ${GCRYPT_LIBRARIES}
-    ${CURL_LIBRARIES}
+    dl
 )

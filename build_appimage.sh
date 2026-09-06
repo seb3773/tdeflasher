@@ -60,33 +60,43 @@ else
 	strip --strip-all "$APPDIR/usr/bin/tdeflasher" >/dev/null 2>&1 || true
 fi
 
-# Resolve and copy library dependencies recursively
-echo "info: resolving and copying library dependencies recursively..."
-declare -A visited_libs
+# Resolve and copy targeted library dependencies
+echo "info: copying targeted library dependencies..."
+libraries=(
+	libtqt-mt.so.3
+	libtdecore.so.14
+	libtdeui.so.14
+	libDCOP.so.14
+	libtdefx.so.14
+	libtqt.so.4
+	libart_lgpl_2.so.2
+	libarchive.so.13
+	libgcrypt.so.20
+	libgpg-error.so.0
+	libidn.so.12
+	libaudio.so.2
+)
 
-# Standard libraries that must be provided by the host system:
-# glibc core, basic X11 protocol, hardware OpenGL drivers, and libicu/libxml2 (system provides libxml2 with its own ICU data)
-EXCLUDE_REGEX="^(ld-linux.*|libc\..*|libm\..*|libpthread\..*|libdl\..*|librt\..*|libresolv\..*|libutil\..*|libanl\..*|libnss_.*|libGL\..*|libGLX\..*|libEGL\..*|libdrm\..*|libglapi\..*|libgbm\..*|libX11\..*|libX11-xcb\..*|libxcb\..*|libXau\..*|libXdmcp\..*|libstdc\+\+\..*|libgcc_s\..*|libgtk3-nocsd\..*|libxml2\..*|libicu.*)$"
+search_dirs=(/opt/trinity/lib /usr/lib/x86_64-linux-gnu /lib/x86_64-linux-gnu /usr/lib)
 
-queue=("$APPDIR/usr/bin/tdeflasher")
-
-while [ ${#queue[@]} -gt 0 ]; do
-	current="${queue[0]}"
-	queue=("${queue[@]:1}")
-	
-	while read -r libname libpath; do
-		[[ -z "$libname" || -z "$libpath" || ! -f "$libpath" ]] && continue
-		[[ "$libname" =~ $EXCLUDE_REGEX ]] && continue
-		
-		if [ -z "${visited_libs[$libname]:-}" ]; then
-			visited_libs["$libname"]=1
-			echo "  -> bundling: $libname ($libpath)"
-			cp -L "$libpath" "$APPDIR/usr/lib/$libname"
-			chmod u+w "$APPDIR/usr/lib/$libname"
-			strip --strip-unneeded "$APPDIR/usr/lib/$libname" 2>/dev/null || true
-			queue+=("$APPDIR/usr/lib/$libname")
-		fi
-	done < <(LD_LIBRARY_PATH="$APPDIR/usr/lib" ldd "$current" 2>/dev/null | awk '/=>/ {print $1, $3}')
+for lib in "${libraries[@]}"; do
+	libpath=$(ldd "$BIN_PATH" 2>/dev/null | awk -v lib="$lib" '$1 == lib {print $3}' | head -n 1)
+	if [[ -z "$libpath" || ! -f "$libpath" ]]; then
+		for d in "${search_dirs[@]}"; do
+			if [ -f "$d/$lib" ]; then
+				libpath="$d/$lib"
+				break
+			fi
+		done
+	fi
+	if [[ -n "$libpath" && -f "$libpath" ]]; then
+		echo "  -> bundling: $lib ($libpath)"
+		cp -L "$libpath" "$APPDIR/usr/lib/$lib"
+		chmod u+w "$APPDIR/usr/lib/$lib"
+		strip --strip-unneeded "$APPDIR/usr/lib/$lib" 2>/dev/null || true
+	else
+		echo "  warning: library $lib not found on system"
+	fi
 done
 
 # Copy icon
