@@ -7,6 +7,13 @@
 #include <ntqpushbutton.h>
 #include <tqwidgetstack.h>
 
+#if !defined(SIGNAL) && defined(TQ_SIGNAL)
+#define SIGNAL(a) TQ_SIGNAL(a)
+#endif
+#if !defined(SLOT) && defined(TQ_SLOT)
+#define SLOT(a) TQ_SLOT(a)
+#endif
+
 class TQLabel;
 class TQTextEdit;
 class TQPushButton;

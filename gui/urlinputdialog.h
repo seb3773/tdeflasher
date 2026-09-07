@@ -4,6 +4,13 @@
 #include <ntqdialog.h>
 #include <ntqstring.h>
 
+#if !defined(SIGNAL) && defined(TQ_SIGNAL)
+#define SIGNAL(a) TQ_SIGNAL(a)
+#endif
+#if !defined(SLOT) && defined(TQ_SLOT)
+#define SLOT(a) TQ_SLOT(a)
+#endif
+
 class TQLineEdit;
 class TQPushButton;
 class TQWidget;

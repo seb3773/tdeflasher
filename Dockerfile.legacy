@@ -1,0 +1,32 @@
+FROM ubuntu:20.04
+
+ENV DEBIAN_FRONTEND=noninteractive
+ENV TZ=UTC
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential \
+    cmake \
+    pkg-config \
+    libarchive-dev \
+    libgcrypt20-dev \
+    libcurl4-openssl-dev \
+    wget \
+    gnupg \
+    ca-certificates \
+    file \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN wget -qO /tmp/trinity-keyring.deb http://mirror.ppa.trinitydesktop.org/trinity/deb/trinity-keyring.deb \
+    && dpkg -i /tmp/trinity-keyring.deb \
+    && rm /tmp/trinity-keyring.deb \
+    && echo 'deb http://mirror.ppa.trinitydesktop.org/trinity/deb/trinity-r14.1.x focal main deps' > /etc/apt/sources.list.d/tde.list \
+    && apt-get update \
+    && apt-get install -y --no-install-recommends \
+       tdelibs14-trinity-dev \
+       tqt3-dev-tools \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN wget -qO /usr/local/bin/appimagetool https://github.com/AppImage/appimagetool/releases/download/continuous/appimagetool-x86_64.AppImage \
+    && chmod +x /usr/local/bin/appimagetool
+
+WORKDIR /src
